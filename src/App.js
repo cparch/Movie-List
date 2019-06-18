@@ -21,6 +21,7 @@ class App extends React.Component{
       userAddedMoviesList: [],
       toWatchFilteredMovies: [],
       watchedFilteredMovies: [],
+      testing: test,
     }
     this.ToWatchFilterBtn = this.ToWatchFilterBtn.bind(this);
     this.WatchedBtnHandler = this.WatchedBtnHandler.bind(this);
