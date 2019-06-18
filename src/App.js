@@ -9,20 +9,20 @@ class App extends React.Component{
   constructor(props) {
     super(props)
     this.state = {movies:[
-      {title: 'Mean Girls', 'watched': false },
-      {title: 'Hackers', 'watched': false},
-      {title: 'The Grey', 'watched': false},
-      {title: 'Sunshine', 'watched': false},
-      {title: 'Ex Machina', 'watched': false},
+      {title: 'Mean Girls', 'watched': false, 'additionalInfo': {show: false, 'runTime': '100 minutes', 'year': 2000} },
+      {title: 'Hackers', 'watched': false, 'additionalInfo': {show: false, 'runTime': '101 minutes', 'year': 2002} },
+      {title: 'The Grey', 'watched': false, 'additionalInfo': {show: false, 'runTime': '102 minutes', 'year': 2003} },
+      {title: 'Sunshine', 'watched': false, 'additionalInfo': {show: false, 'runTime': '103 minutes', 'year': 2004} },
+      {title: 'Ex Machina', 'watched': false, 'additionalInfo': {show: false, 'runTime': '104 minutes', 'year': 2005} },
       ],
       searchMatch: [],
       searchTerm: '',
       addMovieName: '',
       userAddedMoviesList: [],
-      toWatchFilteredMovies: [],
-      watchedFilteredMovies: [],
-      testing: test,
+      toWatchFilteredMovies: {list:[], show: false},
+      watchedFilteredMovies: {list: [], show: false }
     }
+    this.ShowMoreInfo = this.ShowMoreInfo.bind(this);
     this.ToWatchFilterBtn = this.ToWatchFilterBtn.bind(this);
     this.WatchedBtnHandler = this.WatchedBtnHandler.bind(this);
     this.GoBtnHandler = this.GoBtnHandler.bind(this);
@@ -32,16 +32,24 @@ class App extends React.Component{
     this.WatchedFilterBtn = this.WatchedFilterBtn.bind(this);
   }
 
+  ShowMoreInfo(i) {
+    let newState = {...this.state};
+    newState.movies[i].additionalInfo.show = !newState.movies[i].additionalInfo.show;
+    this.setState(newState);
+  }
+
   ToWatchFilterBtn(){
+
     const movies = this.state.movies;
     let newState = {...this.state};
     movies.map(movie => {
       if(!movie.watched) {
-        newState.toWatchFilteredMovies.push(movie)
-      }
+        newState.toWatchFilteredMovies.list.push(movie)
+      } 
     })
-    newState.movies = newState.toWatchFilteredMovies;
-    // newState.toWatchFilteredMovies = [];
+    newState.watchedFilteredMovies.show = false;
+    newState.toWatchFilteredMovies.show = true;
+    newState.watchedFilteredMovies.list = [];
     this.setState(newState)
   }
 
@@ -50,14 +58,12 @@ class App extends React.Component{
     let newState = {...this.state};
     movies.map(movie => {
       if(movie.watched) {
-        // newState.filteredMovies.push(movie)
-        newState.watchedFilteredMovies.push(movie)
-      } else {
-        newState.toWatchFilteredMovies.push(movie)
-      }
+        newState.watchedFilteredMovies.list.push(movie)
+      } 
     })
-    newState.movies = newState.watchedFilteredMovies;
-    // newState.filteredMovies = [];
+    newState.watchedFilteredMovies.show = true;
+    newState.toWatchFilteredMovies.show = false;
+    newState.toWatchFilteredMovies.list = [];
     this.setState(newState)
   }
 
@@ -116,9 +122,11 @@ class App extends React.Component{
           ToWatchFilterBtn ={() => {this.ToWatchFilterBtn()}}
         />
         <MoveList 
+          wholeState={this.state}
           allMovies={this.state.movies}
           searchedMovies={this.state.searchMatch}  
           WatchedBtnHandler={(i) => {this.WatchedBtnHandler(i)}}
+          ShowMoreInfo={(i) => {this.ShowMoreInfo(i)}}
         />
       </div>
     );
